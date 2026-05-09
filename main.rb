@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+# frozen_string_literal: false
 
 require 'discordrb'
 require 'dotenv'
@@ -10,15 +10,22 @@ bot = Discordrb::Bot.new token: DISCORD_BOT_KEY
 
 # array of commands for s::commands
 commands = [
-    {"name" => "s::introduction", "function" => "snakBot introduces itself! usually used as a test to see if the bot is functioning properly."}
+    {'name' => "s::introduction", 'function' => "snakBot introduces itself! usually used as a test to see if the bot is functioning properly."},
+    {'name' => "test", 'function' => "test"}
 ]
 
 
-# all bot commands should start with 's::'
+# all bot commands start with 's::'
 
 bot.message(start_with: 's::commands') do |event|
-    event.respond!(content: 'six seven (placeholder)')
+    list_of_commands = ""
+    commands.each do |command| # loops through commands and posts every command and its function
+        # event.respond!(content: "`#{command['name']}` - #{command['function']}")
+        list_of_commands.concat("`#{command['name']}` - #{command['function']} \n")
+    end
+    event.respond!(content: "#{list_of_commands}")
 end
+
 
 bot.message(start_with: 's::introduction') do |event|
     message = randomize_message()
@@ -28,7 +35,7 @@ end
 
 def randomize_message()
     languages = ['hi!', 'hola!', 'bonjour!', 'oi!', '안녕!', 'aloha!', 'howdy!']
-    language_number = rand(0..(languages.length() - 1)) # automatically scales in case more introduction messages are added
+    language_number = rand(0..(languages.length() - 1))
     message = languages[language_number]
     return message
 end
